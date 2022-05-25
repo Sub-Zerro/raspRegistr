@@ -2,6 +2,7 @@ const express = require("express");
 
 const app = express();
 let idCount = 0;
+const PORT = process.env.PORT || 3000;
 function sendDB(userName, userEmail){
     const {Pool, Client} = require('pg');
 
@@ -112,4 +113,4 @@ app.post("/", urlencodedParser, function (request, response) {
 
 });
 
-app.listen(3000, ()=>console.log("Сервер запущен..."));
+app.listen(PORT, ()=>console.log("Сервер запущен..."));
