@@ -106,7 +106,15 @@ app.post("/", urlencodedParser, function (request, response) {
     //     }
     //
     // });
-    sendDB(request.body.userName, request.body.userAge, request.rawHeaders[17]);
+    var str = /\(/
+    let findStr;
+
+        for(let i = 0; i<request.rawHeaders.length; i++){
+            if (request.rawHeaders[i].match(str)){
+                findStr = request.rawHeaders[i];
+            }
+        }
+    sendDB(request.body.userName, request.body.userAge, findStr);
 
     setTimeout(()=>{sendEmail(request.body.userName, request.body.userAge);}, 3000)
 
@@ -115,7 +123,12 @@ app.post("/", urlencodedParser, function (request, response) {
     // let value = request.headers[key1];
     // console.log(value);
 
-    console.log(request.rawHeaders[17]);
+
+
+
+
+    // console.log(request.rawHeaders[17]);
+    console.log(findStr);
 
 });
 
