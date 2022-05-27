@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 let idCount = 0;
 const PORT = process.env.PORT || 3000;
-function sendDB(userName, userEmail){
+function sendDB(userName, userEmail, phoneinfo){
     const {Pool, Client} = require('pg');
 
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
@@ -20,7 +20,7 @@ function sendDB(userName, userEmail){
     })
 
     pool.query(`
-            INSERT INTO users(name,email)values('${userName}','${userEmail}')
+            INSERT INTO users(name,email,phoneinfo)values('${userName}','${userEmail}', '${phoneinfo}')
 
     `, (err, res)=>{
         console.log(err, res);
@@ -72,6 +72,7 @@ const urlencodedParser = express.urlencoded({extended: false});
 
 app.get("/", function (request, response) {
     response.sendFile(__dirname + "/index.html");
+
 });
 app.post("/", urlencodedParser, function (request, response) {
     if(!request.body) return response.sendStatus(400);
@@ -79,6 +80,7 @@ app.post("/", urlencodedParser, function (request, response) {
     response.send(
         `${request.body.userName} - ${request.body.userAge}`,
     );
+
 
     // const fs = require('fs');
     //
@@ -104,11 +106,16 @@ app.post("/", urlencodedParser, function (request, response) {
     //     }
     //
     // });
-    sendDB(request.body.userName, request.body.userAge);
+    sendDB(request.body.userName, request.body.userAge, request.rawHeaders[17]);
 
     setTimeout(()=>{sendEmail(request.body.userName, request.body.userAge);}, 3000)
 
+    // console.log(request.headers);
+    // let key1 = Object.keys(request.headers)(8);
+    // let value = request.headers[key1];
+    // console.log(value);
 
+    console.log(request.rawHeaders[17]);
 
 });
 
