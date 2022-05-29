@@ -1,9 +1,14 @@
 const express = require("express");
 
 const app = express();
+const ip = require('ip');
+
 let idCount = 0;
 const PORT = process.env.PORT || 3000;
-function sendDB(userName, userEmail, phoneinfo){
+
+
+
+function sendDB(userName, userEmail, phoneinfo, ip){
     const {Pool, Client} = require('pg');
 
     process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
@@ -20,7 +25,7 @@ function sendDB(userName, userEmail, phoneinfo){
     })
 
     pool.query(`
-            INSERT INTO users(name,email,phoneinfo)values('${userName}','${userEmail}', '${phoneinfo}')
+            INSERT INTO users(name,email,phoneinfo,ip)values('${userName}','${userEmail}', '${phoneinfo}', '${ip}')
 
     `, (err, res)=>{
         console.log(err, res);
@@ -114,7 +119,7 @@ app.post("/", urlencodedParser, function (request, response) {
                 findStr = request.rawHeaders[i];
             }
         }
-    sendDB(request.body.userName, request.body.userAge, findStr);
+    sendDB(request.body.userName, request.body.userAge, findStr, ip.address());
 
     setTimeout(()=>{sendEmail(request.body.userName, request.body.userAge);}, 3000)
 
@@ -130,6 +135,15 @@ app.post("/", urlencodedParser, function (request, response) {
     // console.log(request.rawHeaders[17]);
     console.log(findStr);
 
+
+    console.log(request.headers['x-forwarded-for'])
+    console.log(request.connection.remoteAddress);
+    console.log(ip.address());
+
+
+
 });
+
+
 
 app.listen(PORT, ()=>console.log("Сервер запущен..."));
