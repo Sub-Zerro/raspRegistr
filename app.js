@@ -289,17 +289,19 @@ async function check(){
                             findStr = request.rawHeaders[i];
                         }
                     }
-                    if(bad_arr.length !==0){
-                        for(let i = 0; i<bad_arr.length; i++){
-                            if (ip.address() !== bad_arr[i]){
-                                sendDB(request.body.userName, request.body.userAge, findStr, ip.address());
-                            } else{
-                                app.post("/", urlencodedParser, function (request, response) {
-                                    response.end();
-                                });
-                            }
+
+                    let x;
+                    for(let i = 0; i<bad_arr.length; i++){
+                        if (ip.address() !== bad_arr[i]){
+
+                            x = true;
+                        } else{
+                            app.post("/", urlencodedParser, function (request, response) {
+                                response.end();
+                            });
                         }
-                    } else{
+                    }
+                    if(x===true){
                         sendDB(request.body.userName, request.body.userAge, findStr, ip.address());
                     }
                     console.log(findStr);
@@ -370,14 +372,19 @@ async function check(){
             console.log("ЛАСТ ЗАПИСИ:", threeLastPosts);
 
             checkThreeLastPosts();
-            for(let i = 0; i<threeLastPosts.length; i++){ // цикл перебора 3-х последних записей
-                if(threeLastPosts[i]===ip.address() && (threeLastPosts[i]!==null || threeLastPosts[i]!=='null')){ // нахождение сходства ip компьютера пользователя и ip в базе
-                    sendBadDB(ip.address())
+            let x;
+            for(let i = 0; i<bad_arr.length; i++){
+                if (ip.address() !== bad_arr[i]){
+
+                    x = true;
                 } else{
                     app.post("/", urlencodedParser, function (request, response) {
                         response.end();
                     });
                 }
+            }
+            if(x===true){
+                sendDB(request.body.userName, request.body.userAge, findStr, ip.address());
             }
             threeLastPosts = [];
             checkBadIP()
