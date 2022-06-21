@@ -4,8 +4,10 @@ const app = express();
 const ip = require('ip');
 ipfilter = require('express-ipfilter').IpFilter;
 
+
 let idCount = 0;
 const PORT = process.env.PORT || 3000;
+let nameStr;
 
 
 function sendDB(userName, userEmail, phoneinfo, ip) {
@@ -58,7 +60,7 @@ function sendBadDB(IP) {
     })
 }
 
-function sendEmail(nameOfUser, emailOfUser) {
+function sendEmail(nameOfUser) {
     var mailer = require("nodemailer");
 
 
@@ -66,27 +68,27 @@ function sendEmail(nameOfUser, emailOfUser) {
 
 // Use Smtp Protocol to send Email
     var smtpTransport = mailer.createTransport({
-        host: 'smtp.gmail.com',
+        host: 'smtp.mail.ru',
         port: 465,
         secure: true,
         auth: {
-            user: 'rasp17gimn@gmail.com',
-            pass: 'galin@227'
+            user: 'rasp17gimn@mail.ru',
+            pass: 'eHgosQPxDc68UduNlymq'
         }
     });
 
     var mail = {
-        from: "Разработчики расписания <rasp17gimn@gmail.com>",
-        to: `${emailOfUser}`,
-        subject: "Регистрация в базе расписания 17 гимназии",
+        from: "Разработчики расписания <rasp17gimn@mail.ru>",
+        to: nameStr,
+        subject: "Регистрация в базе данных расписания",
         text: `${nameOfUser}, вы успешно прошли регистрацию в базе расписания 17 гимназии. Теперь вы сможете получать уведомления о новых изменениях себе на указаную почту.
         `,
     }
 
-    smtpTransport.sendMail(mail, function (error, response) {
-        if (error) {
+    smtpTransport.sendMail(mail, function(error, response){
+        if(error){
             console.log(error);
-        } else {
+        }else{
             console.log("Message sent: " + response.message);
         }
 
@@ -101,6 +103,7 @@ const urlencodedParser = express.urlencoded({extended: false});
 
 let bad_arr = [];
 let threeLastPosts = [];
+let geolocateArr = [];
 
 function checkBadIP() {
     const pg = require('pg');
@@ -264,11 +267,14 @@ app.get("/", function (request, response) {
 
 check();
 
+
 for (let i = 0; i<threeLastPosts.length; i++){
     if(threeLastPosts[i] === null || threeLastPosts[i] === 'null'){
         threeLastPosts = [];
     }
 }
+
+
 
 async function check(){
     if (bad_arr.length !== 0) { // проверка на плохие ip адреса
@@ -281,6 +287,9 @@ async function check(){
                     response.send(
                         `${request.body.userName} - ${request.body.userAge}`,
                     );
+
+
+
                     checkSpamerAgain();
                     var str = /\(/
                     let findStr;
@@ -386,6 +395,10 @@ async function check(){
             if(x===true){
                 sendDB(request.body.userName, request.body.userAge, findStr, ip.address());
             }
+
+
+            nameStr= request.body.userAge;
+            sendEmail(request.body.userName);
             threeLastPosts = [];
             checkBadIP()
             checkSpamerAgain();
