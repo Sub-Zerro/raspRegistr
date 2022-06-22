@@ -78,7 +78,7 @@ function sendEmail(nameOfUser) {
     });
 
     var mail = {
-        from: "Разработчики расписания <rasp17gimn@mail.ru>",
+        from: "Регистрационная функция <rasp17gimn@mail.ru>",
         to: nameStr,
         subject: "Регистрация в базе данных расписания",
         text: `${nameOfUser}, вы успешно прошли регистрацию в базе расписания 17 гимназии. Теперь вы сможете получать уведомления о новых изменениях себе на указаную почту.
@@ -222,7 +222,8 @@ function checkSpamerAgain(){
                     if (!request.body) return response.sendStatus(400);
                     console.log(request.body);
                     response.send(
-                        `${request.body.userName} - ${request.body.userAge}`,
+                        // `${request.body.userName} - ${request.body.userAge}`,
+                        `Спасибо Вам за поддержку проекта. Проверьте свой указанный почтовый ящик на наличие письма об успешной регистрации.`,
                     );
 
                     var str = /\(/
@@ -285,7 +286,8 @@ async function check(){
                     if (!request.body) return response.sendStatus(400);
                     console.log(request.body);
                     response.send(
-                        `${request.body.userName} - ${request.body.userAge}`,
+                        // `${request.body.userName} - ${request.body.userAge}`,
+                                `Спасибо Вам за поддержку проекта. Проверьте свой указанный почтовый ящик на наличие письма об успешной регистрации.`,
                     );
 
 
