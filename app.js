@@ -347,7 +347,8 @@ async function check(){
             if (!request.body) return response.sendStatus(400);
             console.log(request.body);
             response.send(
-                `${request.body.userName} - ${request.body.userAge}`,
+                // `${request.body.userName} - ${request.body.userAge}`,
+                `Спасибо Вам за поддержку проекта. Проверьте свой указанный почтовый ящик на наличие письма об успешной регистрации.`,
             );
 
 
