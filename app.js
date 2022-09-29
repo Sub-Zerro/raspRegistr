@@ -73,7 +73,8 @@ function sendEmail(nameOfUser) {
         secure: true,
         auth: {
             user: 'rasp17gimn@mail.ru',
-            pass: 'eHgosQPxDc68UduNlymq'
+            //pass: 'eHgosQPxDc68UduNlymq'
+            pass: 'MzhmQGN4rqivHcdHECUz'
         }
     });
 
